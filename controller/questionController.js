@@ -13,9 +13,9 @@ async function allQuestions(req, res) {
         q.created_at,
         u.username AS user_name,
         COUNT(a.answerid) AS answerCount
-      FROM questionsTable q
-      JOIN usersTable u ON q.userid = u.userid
-      LEFT JOIN answersTable a ON q.questionid = a.questionid
+      FROM questionstable q
+      JOIN userstable u ON q.userid = u.userid
+      LEFT JOIN answerstable a ON q.questionid = a.questionid
       GROUP BY q.questionid, q.title, q.description, q.created_at, u.username
       ORDER BY q.created_at DESC
     `);
@@ -41,7 +41,7 @@ async function getQuestionById(req, res) {
 
   try {
     const [rows] = await dbCon.query(
-      "SELECT q.questionid, q.title, q.description, u.username FROM questionsTable q JOIN usersTable u ON q.userid = u.userid WHERE q.questionid=?",
+      "SELECT q.questionid, q.title, q.description, u.username FROM questionstable q JOIN userstable u ON q.userid = u.userid WHERE q.questionid=?",
       [questionid]
     );
 
@@ -73,7 +73,7 @@ async function createQuestion(req, res) {
     const questionid = uuidv4(); // Generate a unique question ID
     const userid = req.user.userid; // Get the user ID from the authenticated user
 
-    const insertQuery = `INSERT INTO questionsTable ( questionid,
+    const insertQuery = `INSERT INTO questionstable ( questionid,
       userid, title, description,tag) VALUES (?, ?, ?, ?, ?)`;
     await dbCon.query(insertQuery, [
       questionid,
@@ -101,7 +101,7 @@ async function updateQuestion(req, res) {
 
   try {
     await dbCon.query(
-      "UPDATE questionsTable SET title = ?, description = ? WHERE questionid = ?",
+      "UPDATE questionstable SET title = ?, description = ? WHERE questionid = ?",
       [title, description, id]
     );
     return res.status(StatusCodes.OK).json({ msg: "Question updated!" });
@@ -117,8 +117,8 @@ async function updateQuestion(req, res) {
 async function deleteQuestion(req, res) {
   const { id } = req.params;
   try {
-    await dbCon.query("DELETE FROM answersTable WHERE questionid = ?", [id]);
-    await dbCon.query("DELETE FROM questionsTable WHERE questionid = ?", [id]);
+    await dbCon.query("DELETE FROM answerstable WHERE questionid = ?", [id]);
+    await dbCon.query("DELETE FROM questionstable WHERE questionid = ?", [id]);
     return res.status(StatusCodes.OK).json({ msg: "Question deleted!" });
   } catch (err) {
     console.error(err.message);

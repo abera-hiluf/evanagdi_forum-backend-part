@@ -14,7 +14,7 @@ async function register(req, res) {
   }
   try {
     const [user] = await dbCon.query(
-      "SELECT username, userid FROM usersTable WHERE username=? OR email=?",
+      "SELECT username, userid FROM userstable WHERE username=? OR email=?",
       [username, email]
     );
     if (user.length > 0) {
@@ -34,8 +34,8 @@ async function register(req, res) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await dbCon.query(
-      "INSERT INTO usersTable (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?)",
-      [username, firstname, lastname, email, hashedPassword]
+      "INSERT INTO userstable (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?)",
+      [username, firstName, lastName, email, hashedPassword]
     );
     return res
       .status(StatusCodes.CREATED)
@@ -62,7 +62,7 @@ async function login(req, res) {
   try {
     //the response is in the form of array
    const [user] = await dbCon.query(
-  "SELECT username, userid, password FROM usersTable WHERE email=?",
+  "SELECT username, userid, password FROM userstable WHERE email=?",
   [email]
 );
 

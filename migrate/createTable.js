@@ -4,7 +4,7 @@ async function createTable() {
   try {
     // Create users table
     await db.query(`
-      CREATE TABLE IF NOT EXISTS usersTable (
+      CREATE TABLE IF NOT EXISTS userstable (
         userid INT AUTO_INCREMENT PRIMARY KEY,
         firstName VARCHAR(25) NOT NULL,
         lastName VARCHAR(25) NOT NULL,
@@ -17,7 +17,7 @@ async function createTable() {
 
     // Create questions table
     await db.query(`
-      CREATE TABLE IF NOT EXISTS questionsTable (
+      CREATE TABLE IF NOT EXISTS questionstable (
         id INT AUTO_INCREMENT PRIMARY KEY,
         questionid VARCHAR(100) NOT NULL UNIQUE,
         userid INT NOT NULL,
@@ -31,14 +31,14 @@ async function createTable() {
 
     // Create answers table
     await db.query(`
-      CREATE TABLE IF NOT EXISTS answersTable (
+      CREATE TABLE IF NOT EXISTS answerstable (
         answerid INT AUTO_INCREMENT PRIMARY KEY,
         questionid VARCHAR(100) NOT NULL,
         userid INT NOT NULL,
         answer Text NOT NULL,
          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (questionid) REFERENCES questionsTable(questionid),
-        FOREIGN KEY (userid) REFERENCES usersTable(userid)
+        FOREIGN KEY (questionid) REFERENCES questionstable(questionid),
+        FOREIGN KEY (userid) REFERENCES userstable(userid)
       ) ENGINE=InnoDB
     `);
 

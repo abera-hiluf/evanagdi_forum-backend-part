@@ -7,7 +7,7 @@ async function getAnswerById(req, res) {
   console.log("Fetching answers for question ID:", questionId);
   try {
     const [question] = await dbCon.query(
-      "SELECT * FROM questionsTable WHERE questionid=?",
+      "SELECT * FROM questionstable WHERE questionid=?",
       [questionId]
     );
 
@@ -24,8 +24,8 @@ async function getAnswerById(req, res) {
                 a.answer , 
                 u.username 
               
-            FROM answersTable a
-            JOIN usersTable u ON a.userid = u.userid
+            FROM answerstable a
+            JOIN userstable u ON a.userid = u.userid
             WHERE a.questionid = ?`,
       [questionId]
     );
@@ -56,7 +56,7 @@ async function createAnswer(req, res) {
 
   try {
     await dbCon.query(
-      "INSERT INTO answersTable (answer, questionid, userid) VALUES (?, ?, ?)",
+      "INSERT INTO answerstable (answer, questionid, userid) VALUES (?, ?, ?)",
       [answer, question_id, userid]
     );
     res.status(StatusCodes.CREATED).json({ msg: "Answer posted successfully" });
@@ -80,7 +80,7 @@ async function updateAnswers(req, res) {
 
   try {
     const [result] = await dbCon.query(
-      "UPDATE answersTable SET answer = ? WHERE answerid = ?",
+      "UPDATE answerstable SET answer = ? WHERE answerid = ?",
       [answer.trim(), answerId]
     );
 
@@ -103,7 +103,7 @@ async function updateAnswers(req, res) {
 async function deleteAnswer(req, res) {
   const { id } = req.params;
   try {
-    await dbCon.query("DELETE FROM answersTable WHERE answerid = ?", [id]);
+    await dbCon.query("DELETE FROM answerstable WHERE answerid = ?", [id]);
     return res.status(StatusCodes.OK).json({ msg: "Answer deleted!" });
   } catch (err) {
     console.error(err.message);
@@ -119,7 +119,7 @@ async function getSingleAnswerById(req, res) {
 
   try {
     const [rows] = await dbCon.query(
-      "SELECT answerid, answer, questionid FROM answersTable WHERE answerid = ?",
+      "SELECT answerid, answer, questionid FROM answerstable WHERE answerid = ?",
       [answerId]
     );
 
